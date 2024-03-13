@@ -19,6 +19,5 @@ class ThreadManager(models.Manager):
             thread.save()
             return thread
 
-
     def get_pair(self, x, y):
         return x * x + x + y if x>y else y * y + y + x

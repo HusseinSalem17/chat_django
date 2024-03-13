@@ -96,14 +96,27 @@ def api_unread(request):
 
 @login_required
 def index(request, id=0):
-    user = User.objects.get(username=request.user)
-    Usettings = UserSetting.objects.get(user=user)   
+    try:
+        user = User.objects.get(username=request.user)
+        Usettings = UserSetting.objects.get(user=user)
 
-    context = {
-        "settings" : Usettings,
-        'id' : id,
-    }
-    return render(request, 'index.html', context=context)
+        context = {
+            "settings" : Usettings,
+            'id' : id,
+        }
+        return render(request, 'index.html', context=context)
+    except User.DoesNotExist:
+        # Handle the case when the user does not exist
+        # You can redirect to an error page or return an error response
+        return HttpResponse("User does not exist")
+    except UserSetting.DoesNotExist:
+        # Handle the case when the user settings do not exist
+        # You can redirect to an error page or return an error response
+        return HttpResponse("User settings do not exist")
+    except Exception as e:
+        # Handle any other exceptions that may occur
+        # You can log the error or return an error response
+        return HttpResponse(f"An error occurred: {str(e)}")
 
 
 def login_view(request):
